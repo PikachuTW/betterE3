@@ -6,4 +6,10 @@
 
 ## Installation
 
+### Step 1: Script Manager
+
+Install [Violentmonkey](https://violentmonkey.github.io/get-it/) or [Tampermonkey](https://www.tampermonkey.net/) (The script has been tested on Violentmonkey/Firefox)
+
+### Step 2: User Script
+
 [從github安裝](https://raw.githubusercontent.com/PikachuTW/betterE3/refs/heads/main/betterE3.user.js)
