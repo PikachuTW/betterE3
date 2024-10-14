@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        betterE3
 // @namespace   Violentmonkey Scripts
-// @match       *://e3p.nycu.edu.tw/my
+// @match       *://e3p.nycu.edu.tw/my/
 // @grant       none
 // @version     1.0
 // @author      Tails
