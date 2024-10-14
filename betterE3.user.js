@@ -37,7 +37,7 @@
             })
         })
     }
-    newList.sort((a, b) => a.date < b.date);
+    newList.sort((a, b) => b.date - a.date);
     console.log(newList);
     let itemNum = 0;
     for (let pageNum = 1; ; pageNum += 1) {
