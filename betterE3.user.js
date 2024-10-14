@@ -25,7 +25,7 @@
                 date.setHours(parseInt(parsed[3]));
                 date.setMinutes(parseInt(parsed[4]));
             } else {
-                const parsed = element.textContent.match(/(\d+) (\w+),(\d+):(\d+)/);
+                const parsed = element.textContent.match(/(\d+) (\w+), (\d+):(\d+)/);
                 date.setDate(parseInt(parsed[1]));
                 date.setMonth(new Date(Date.parse(parsed[2] + " 1, 2024")).getMonth());
                 date.setHours(parseInt(parsed[3]));
