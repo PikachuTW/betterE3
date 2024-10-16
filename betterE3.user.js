@@ -6,7 +6,7 @@
 // @grant       GM_getValue
 // @grant       GM_addStyle
 // @grant       GM_registerMenuCommand
-// @version     1.1.0
+// @version     1.1.1
 // @author      Tails
 // @description 2024/10/14 上午8:45:03
 // @downloadURL https://raw.githubusercontent.com/PikachuTW/betterE3/refs/heads/main/betterE3.user.js
@@ -26,23 +26,32 @@ const config = new MonkeyConfig({
             type: 'checkbox',
             default: true
         },
-        // disable_calendar: {
-        //     label: '首頁-移除行事曆',
-        //     type: 'checkbox',
-        //     default: true,
-        // },
         // remove_left_menu: {
         //     label: '首頁-移除左側清單',
         //     type: 'checkbox',
         //     default: true,
         // },
         remove_redundant: {
-            label: '<b>首頁</b> 移除一些廢話(新生課程、紅字等)',
+            label: '<b>首頁</b> 改善整個頁面，去除多餘資訊(真的好看很多!!)',
             type: 'checkbox',
             default: true,
         }
     }
 });
+
+openMonkeyConfig = () => {
+    config.open();
+}
+
+const dropDownList = document.getElementById('carousel-item-main-2');
+if (dropDownList) {
+    dropDownList.innerHTML += '<div class="dropdown-divider"></div><a class="dropdown-item " role="menuitem" tabindex="-1" id="monkey-open">betterE3插件設定</a>'
+    document.getElementById('monkey-open').addEventListener('click', openMonkeyConfig, true);
+    GM_addStyle(`
+    #monkey-open:hover{
+        cursor: pointer;
+    }`)
+}
 
 const remove = (selector) => {
     if (!selector) return console.error('The selector isnt given');
@@ -95,17 +104,18 @@ const sortAnnouncement = () => {
     console.log(newList);
 }
 
-// const disableCalendar = () => {
-//     document.querySelector('#btn_dcpc_current_course_stu').remove();
-//     // document.querySelector('.layer2_right').remove();
-//     // GM_addStyle(`
-//     //     @media only screen and (max-width: 960px){
-//     //         .layer2_right {
-//     //             display: none;
-//     //         }
-//     //     }
-//     // `);
-// }
+const disableCalendar = () => {
+    remove('#layer2_right_cal');
+    document.querySelector('#btn_dcpc_current_course_stu').remove();
+    // document.querySelector('.layer2_right').remove();
+    // GM_addStyle(`
+    //     @media only screen and (max-width: 960px){
+    //         .layer2_right {
+    //             display: none;
+    //         }
+    //     }
+    // `);
+}
 
 // const removeLeftMenu = () => {
 //     document.querySelector('.layer2_left').remove();
@@ -124,6 +134,7 @@ const sortAnnouncement = () => {
 // }
 
 const removeRedundant = () => {
+    disableCalendar();
     // 移除頭貼
     remove('.img2018_personal_plc');
     GM_addStyle(`
@@ -172,12 +183,23 @@ const removeRedundant = () => {
     }
     // 移除footer, 右下角問號
     remove('#page-footer');
-    // document.querySelector('#mail_menu').remove();
-    // document.querySelector('#region-main-box > div:nth-child(1)').remove();
-    // document.querySelector('#page-header').remove();
+    // remove不知道幹嘛的iframe元件(可能要注意)
+    remove('div.mt-3:nth-child(1) > iframe:nth-child(2)');
+    // 移除多餘的空白們
+    document.getElementById('layer2_right_current_course_stu').outerHTML += '<br>';
+    GM_addStyle(`.layer2_left{height: auto;margin-left:0rem;} .layer2_right{height: auto;flex:1;max-width:none;}
+        
+        #inst51>div>div>div{margin-right:0rem;margin-left:0rem;}`)
+    GM_addStyle(`div.mt-3:nth-child(1){margin-top:0rem !important;}`)
+    try {
+        const parentE = document.getElementById('layer2_right_school_resource').parentElement;
+        parentE.querySelector('br:nth-of-type(2)').remove();
+        parentE.innerHTML += '<br>';
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 if (config.get('sort_announcement')) sortAnnouncement();
-// if (config.get('disable_calendar')) disableCalendar();
 // if (config.get('remove_left_menu')) removeLeftMenu();
 if (config.get('remove_redundant')) removeRedundant();
