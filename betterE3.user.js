@@ -26,11 +26,6 @@ const config = new MonkeyConfig({
             type: 'checkbox',
             default: true
         },
-        // remove_left_menu: {
-        //     label: '首頁-移除左側清單',
-        //     type: 'checkbox',
-        //     default: true,
-        // },
         remove_redundant: {
             label: '<b>首頁</b> 改善整個頁面，去除多餘資訊(真的好看很多!!)',
             type: 'checkbox',
@@ -106,35 +101,27 @@ const sortAnnouncement = () => {
 
 const disableCalendar = () => {
     remove('#layer2_right_cal');
-    document.querySelector('#btn_dcpc_current_course_stu').remove();
-    // document.querySelector('.layer2_right').remove();
-    // GM_addStyle(`
-    //     @media only screen and (max-width: 960px){
-    //         .layer2_right {
-    //             display: none;
-    //         }
-    //     }
-    // `);
+    remove('#btn_dcpc_current_course_stu');
 }
 
-// const removeLeftMenu = () => {
-//     document.querySelector('.layer2_left').remove();
-//     document.querySelector('#instance-51-header').remove();
-//     document.querySelector('.img2018_personal_plc').remove();
-//     document.querySelector('#btn_dcpc_current_course_closed').remove();
-//     document.querySelector('#btn_dcpc_school_resource').remove();
-//     GM_addStyle(`
-//             .layer2_right {
-//                 flex: 1;
-//                 max-width: 100%;
-//                 box-shadow: none;
-//                 height: auto;
-//             }
-//         `);
-// }
+const removeLeftMenu = () => {
+    GM_addStyle(`@media only screen and (min-width: 960px){
+    .layer2_left{
+    display:none !important;}
+        }
+    #inst51 > div:nth-child(1){
+    padding: 0rem !important;}
+    .layer2_right{
+    box-shadow:none;}
+        .layer2_left{
+    box-shadow:none;
+    margin-right:auto;
+    }`)
+}
 
 const removeRedundant = () => {
     disableCalendar();
+    removeLeftMenu();
     // 移除頭貼
     remove('.img2018_personal_plc');
     GM_addStyle(`
@@ -196,11 +183,17 @@ const removeRedundant = () => {
         const parentE = document.getElementById('layer2_right_school_resource').parentElement;
         parentE.querySelector('br:nth-of-type(2)').remove();
         parentE.innerHTML += '<br>';
+        document.querySelector('#layer2_right_current_course_left > div:nth-child(1)').outerHTML += '<br>';
     } catch (err) {
         console.error(err);
     }
+    document.querySelectorAll('#layer2_right_current_course_stu > div > a').forEach((element) => {
+        element.innerHTML = '&nbsp;&nbsp;【' + element.innerHTML.split('【')[1];
+    });
+    GM_addStyle(`#topofscroll {
+	margin-bottom: 1.5rem !important;
+    }`);
 }
 
 if (config.get('sort_announcement')) sortAnnouncement();
-// if (config.get('remove_left_menu')) removeLeftMenu();
 if (config.get('remove_redundant')) removeRedundant();
