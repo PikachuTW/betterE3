@@ -6,7 +6,7 @@
 // @grant       GM_getValue
 // @grant       GM_addStyle
 // @grant       GM_registerMenuCommand
-// @version     1.1.2
+// @version     1.1.3
 // @author      Tails
 // @description 2024/10/14 上午8:45:03
 // @downloadURL https://raw.githubusercontent.com/PikachuTW/betterE3/refs/heads/main/betterE3.user.js
