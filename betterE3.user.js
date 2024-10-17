@@ -6,7 +6,7 @@
 // @grant       GM_getValue
 // @grant       GM_addStyle
 // @grant       GM_registerMenuCommand
-// @version     1.1.1
+// @version     1.1.2
 // @author      Tails
 // @description 2024/10/14 上午8:45:03
 // @downloadURL https://raw.githubusercontent.com/PikachuTW/betterE3/refs/heads/main/betterE3.user.js
@@ -187,9 +187,10 @@ const removeRedundant = () => {
     remove('div.mt-3:nth-child(1) > iframe:nth-child(2)');
     // 移除多餘的空白們
     document.getElementById('layer2_right_current_course_stu').outerHTML += '<br>';
-    GM_addStyle(`.layer2_left{height: auto;margin-left:0rem;} .layer2_right{height: auto;flex:1;max-width:none;}
-        
+    GM_addStyle(`.layer2_left{height: auto;margin-left:0rem;min-width:25%;width:auto;} .layer2_right{height: auto;flex:1;max-width:none;width:auto;}
         #inst51>div>div>div{margin-right:0rem;margin-left:0rem;}`)
+    GM_addStyle(`@media only screen and (max-width: 960px) {
+        .layer2_right{display:none;}}`)
     GM_addStyle(`div.mt-3:nth-child(1){margin-top:0rem !important;}`)
     try {
         const parentE = document.getElementById('layer2_right_school_resource').parentElement;
