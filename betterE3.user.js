@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name        betterE3
 // @namespace   Violentmonkey Scripts
-// @match       *://e3p.nycu.edu.tw/my/*
+// @match       *://e3p.nycu.edu.tw/*
 // @grant       GM_setValue
 // @grant       GM_getValue
 // @grant       GM_addStyle
 // @grant       GM_registerMenuCommand
-// @version     1.1.3
+// @version     1.2.0
 // @author      Tails
 // @description 2024/10/14 上午8:45:03
 // @downloadURL https://raw.githubusercontent.com/PikachuTW/betterE3/refs/heads/main/betterE3.user.js
@@ -30,22 +30,25 @@ const config = new MonkeyConfig({
             label: '<b>首頁</b> 改善整個頁面，去除多餘資訊(真的好看很多!!)',
             type: 'checkbox',
             default: true,
+        },
+        remove_readlist: {
+            label: '<b>課程</b> 移除「課程閱讀清單」',
+            type: 'checkbox',
+            default: true,
         }
     }
 });
 
-openMonkeyConfig = () => {
-    config.open();
-}
-
-const dropDownList = document.getElementById('carousel-item-main-2');
-if (dropDownList) {
-    dropDownList.innerHTML += '<div class="dropdown-divider"></div><a class="dropdown-item " role="menuitem" tabindex="-1" id="monkey-open">betterE3插件設定</a>'
-    document.getElementById('monkey-open').addEventListener('click', openMonkeyConfig, true);
-    GM_addStyle(`
+const addDropDown = () => {
+    const dropDownList = document.getElementById('carousel-item-main-2');
+    if (dropDownList) {
+        dropDownList.innerHTML += '<div class="dropdown-divider"></div><a class="dropdown-item " role="menuitem" tabindex="-1" id="monkey-open">betterE3插件設定</a>'
+        document.getElementById('monkey-open').addEventListener('click', config.open, true);
+        GM_addStyle(`
     #monkey-open:hover{
         cursor: pointer;
-    }`)
+    }`);
+    };
 }
 
 const remove = (selector) => {
@@ -195,5 +198,23 @@ const removeRedundant = () => {
     }`);
 }
 
-if (config.get('sort_announcement')) sortAnnouncement();
-if (config.get('remove_redundant')) removeRedundant();
+const removeReadlist = () => {
+    document.querySelectorAll('#section-0>div>ul>li>div').forEach((e) => {
+        const activityname = e.getAttribute('data-activityname');
+        if (activityname && activityname.includes('Course Reading List')) {
+            e.parentElement.remove();
+        }
+    })
+}
+
+const init = () => {
+    addDropDown();
+    if (location.pathname.startsWith('/my')) {
+        if (config.get('sort_announcement')) sortAnnouncement();
+        if (config.get('remove_redundant')) removeRedundant();
+    } else if (location.pathname.startsWith('/course/view.php')) {
+        if (config.get('remove_readlist')) removeReadlist();
+    }
+}
+
+init();
